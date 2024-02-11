@@ -10,7 +10,7 @@ const Memeber = async () => {
   if(!session) redirect("api/auth/signin?callbackUrl=/Member")
   return (
     <>
-        It's a user based page coming from server 
+        It&apos;s a user based page coming from server 
         {session && <p>{session?.user?.email}</p>}
         {session && <p>{session?.user?.role}</p>}
     </>
