@@ -9,6 +9,8 @@ export const options = {
 
         let userRole = "test@gmail.com";
         if (profile?.email == "anandmanash321@gmail.com") userRole = "admin";
+        
+        else userRole = "user"
 
         return {
           ...profile,
@@ -22,6 +24,10 @@ export const options = {
       profile(profile) {
         // console.log("Profile Google: ", profile);
 
+        let userRole = "test@gmail.com";
+        if (profile?.email == "test@gmail.com") userRole = "admin";
+        else userRole = "user"
+
         return {
           ...profile,
           id: profile.sub,
@@ -32,13 +38,14 @@ export const options = {
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
+  secret:process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.role = user.role;
       return token;
     },
     async session({ session, token }) {
-      if (user) session.user.role = token.role;
+      if (token) session.user.role = token.role;
       return session;
     },
   },
