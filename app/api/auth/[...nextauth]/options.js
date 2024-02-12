@@ -13,8 +13,7 @@ export const options = {
 
         let userRole = "test@gmail.com";
         if (profile?.email == "anandmanash321@gmail.com") userRole = "admin";
-        
-        else userRole = "user"
+        else userRole = "user";
 
         return {
           ...profile,
@@ -30,7 +29,7 @@ export const options = {
 
         let userRole = "test@gmail.com";
         if (profile?.email == "anandmanash321@gmail.com") userRole = "admin";
-        else userRole = "user"
+        else userRole = "user";
 
         return {
           ...profile,
@@ -43,41 +42,46 @@ export const options = {
     }),
     CredentialsProvider({
       name: "Credentials",
-      credentials:{
-        email:{
-          label:"email",
-          type:"text",
-          placeholder:"Your email"
+      credentials: {
+        email: {
+          label: "email",
+          type: "text",
+          placeholder: "Your email",
         },
-        password:{
-          label:"password",
-          type:"password",
-          placeholder:"Your password"
+        password: {
+          label: "password",
+          type: "password",
+          placeholder: "Your password",
         },
+      
       },
-      async authorize(credentials){
+      async authorize(credentials) {
         try {
-          const foundUser = await User.findOne({email:credentials.email}).lean().exec()
-          if(foundUser){
-              console.log("user exists")
-              const match = await bcrypt.compare(credentials.password,foundUser.password)
-              if(match) {
-                console.log("Good pass")
-                delete foundUser.password
-              }
+          const foundUser = await User.findOne({ email: credentials.email })
+            .lean()
+            .exec();
+          if (foundUser) {
+            console.log("user exists");
+            const match = await bcrypt.compare(
+              credentials.password,
+              foundUser.password
+            );
+            if (match) {
+              console.log("Good pass");
+              delete foundUser.password;
+            }
 
-              foundUser["role"] = "Unverified User"
-              return foundUser
-
-          } 
+            foundUser["role"] = "Unverified User";
+            return foundUser;
+          }
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-        return null
-      }
+        return null;
+      },
     }),
   ],
-  secret:process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.role = user.role;
