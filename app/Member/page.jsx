@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 const Memeber = async () => {
   const session  = await getServerSession(options)
-  // console.log(session)
+  console.log(session)
   
   if(!session) redirect("api/auth/signin?callbackUrl=/Member")
   return (

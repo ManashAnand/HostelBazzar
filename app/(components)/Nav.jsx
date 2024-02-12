@@ -5,18 +5,21 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/ui/ModeToggle";
+import { useRouter } from "next/navigation";
 const Nav = () => {
   // const session = ''
   const { data: session } = useSession();
 
   const [openNav, setOpenNav] = useState(false);
 
+  const router = useRouter()
+
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <Link
-            href="https://HostelBazzar.com/"
+            href="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             {/* <img
@@ -68,7 +71,7 @@ const Nav = () => {
                 </Link>
               </li>
 
-              <li>
+              {/* <li>
                 <Link
                   href="/ClientMember"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
@@ -91,21 +94,20 @@ const Nav = () => {
                 >
                   Public
                 </Link>
-              </li>
+              </li> */}
               <li>
                 {session ? (
-                  <Link href="/api/auth/signout?callbackUrl=/" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Logout</Link>
+                  <Link href="/api/auth/signout?callbackUrl=/" className="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600 dark:hover:bg-yellow-700 focus:outline-none dark:focus:ring-yellow-800">Logout</Link>
                 ) : (
                   <Link href="/api/auth/signin" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Login</Link>
                 )}
               </li>
               <li>
-                <Link
-                  href="/CreateUser"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  CreateUser
-                </Link>
+                {
+                  !session && (
+                   <Button variant="secondary" onClick={() => router.push('/CreateUser')}>Signup</Button>
+                  )
+                }
               </li>
               <li>
                 <ModeToggle/>
