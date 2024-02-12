@@ -40,7 +40,7 @@ const UserForm = () => {
       <form
         onSubmit={handleSubmit}
         method="post"
-        className="flex flex-col gap-3 w-1/2"
+        className="flex flex-col gap-3 w-1/2 dark:bg-red-500 bg-blue-500"
       >
         <h1>Create New User</h1>
         <label>Full Name</label>
