@@ -5,10 +5,10 @@ import bcrypt from "bcrypt";
 export async function POST(req) {
   try {
     const body = await req.json();
-    const userData = body.formData;
+    console.log(body)
 
     //Confirm data exists
-    if (!userData?.email || !userData.password) {
+    if (!body?.email || !body.password) {
       return NextResponse.json(
         { message: "All fields are required." },
         { status: 400 }
@@ -16,7 +16,7 @@ export async function POST(req) {
     }
 
     // check for duplicate emails
-    const duplicate = await User.findOne({ email: userData.email })
+    const duplicate = await User.findOne({ email: body.email })
       .lean()
       .exec();
 
@@ -24,10 +24,10 @@ export async function POST(req) {
       return NextResponse.json({ message: "Duplicate Email" }, { status: 409 });
     }
 
-    const hashPassword = await bcrypt.hash(userData.password, 10);
-    userData.password = hashPassword;
+    const hashPassword = await bcrypt.hash(body.password, 10);
+    body.password = hashPassword;
 
-    await User.create(userData);
+    await User.create(body);
     return NextResponse.json({ message: "User Created." }, { status: 201 });
   } catch (error) {
     console.log(err);
