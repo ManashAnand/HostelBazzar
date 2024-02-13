@@ -5,9 +5,12 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/ui/ModeToggle";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 const Nav = () => {
   // const session = ''
+
+  const url = usePathname()
+  // console.log(url)
   const { data: session } = useSession();
 
   const [openNav, setOpenNav] = useState(false);
@@ -64,7 +67,7 @@ const Nav = () => {
               <li>
                 <Link
                   href="/"
-                  className="block py-2 px-3 text-white rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white  "
+                  className={`block   dark:text-white rounded md:bg-transparent  md:p-0   ${url=='/'?"text-blue-500 dark:text-blue-500":""} `}
                   aria-current="page"
                 >
                   Home
@@ -95,6 +98,14 @@ const Nav = () => {
                   Public
                 </Link>
               </li> */}
+              {
+                session &&(
+                  <Link href={'/AddProduct'} className={`${url=='/AddProduct'?"text-blue-500 dark:text-blue-500":""}`}>
+                    Add a item
+                  </Link>
+
+                )
+              }
               <li>
                 {session ? (
                   <Link href="/api/auth/signout?callbackUrl=/" className="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600 dark:hover:bg-yellow-700 focus:outline-none dark:focus:ring-yellow-800">Logout</Link>
