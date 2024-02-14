@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Select,
     SelectContent,
@@ -7,6 +7,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import axios from 'axios';
   
 
 export default function Home() {
@@ -16,6 +17,15 @@ export default function Home() {
       setSelectedValue(event.target.value);
         console.log("worsdk")
     };
+
+    const getAllPost = async () => {
+      const {data } = await axios.get('/api/GetAllProduct');
+      console.log(data)
+    }
+
+    // useEffect(() => {
+    //   getAllPost();
+    // })
 
   return (
     <>

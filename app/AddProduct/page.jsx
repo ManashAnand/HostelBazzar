@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import React, { useState } from "react";
+import { useForm } from 'react-hook-form';
 
 const AddProduct = () => {
   const { data: session } = useSession({
@@ -13,14 +14,19 @@ const AddProduct = () => {
     },
   });
   // console.log(session);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const [title,setTitle] = useState("")
   const [price,setPrice] = useState(10)
   const [number,setNumber] = useState("")
   const [room,setRoom] = useState(107)
-  const [file,setFile] = useState()
+  // const [file,setFile] = useState()
 
-  const handleSubmit = async (e) => {
+  const handleAddProduct = async (e) => {
     e.preventDefault()
     // const formData = new FormData();
     const ownerEmail = session?.user?.email
@@ -31,6 +37,21 @@ const AddProduct = () => {
 
 
   }
+
+  
+  const onSubmit = async (data) => {
+    // e.preventDefault()
+    // console.log(data.file[0])
+    const formData = new FormData();
+    formData.append("file", data.file[0]);
+    // console.log(file)
+    console.log(formData)
+
+    const {data:response} = await axios.post('/api/AddImage',formData);
+    console.log(response)
+
+  };
+
 
   return (
     <>
@@ -249,16 +270,24 @@ const AddProduct = () => {
                 SVG, PNG, JPG or GIF (MAX. 800x400px)
               </p>
             </div>
-            <input id="dropzone-file" type="file" class="hidden" onChange={e => setFile(e.target.files[0])}/>
+            <input id="dropzone-file" type="file" class="hidden" 
+            {...register("file")}/>
           </label>
         </div>
 
         <button
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onClick={handleSubmit}
+          onClick={handleAddProduct}
         >
           Submit
+        </button>
+        <button
+          type="submit"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onClick={handleSubmit(onSubmit)}
+        >
+          Add image
         </button>
       </form>
     </>
