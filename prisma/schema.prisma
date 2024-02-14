@@ -8,10 +8,13 @@ generator client {
 }
 
 model Post {
-    id String @id @default(auto()) @map("_id") @db.ObjectId  
-    title String 
-    roomNo String
-    mobile String
-    Image String
-
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  owner      String
+  ownerEmail String
+  title      String
+  roomNo     Int
+  mobile     String
+  Image      String?
+  price      Int
+  createdAt  DateTime @default(now())
 }

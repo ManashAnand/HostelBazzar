@@ -1,8 +1,9 @@
 "use client";
 
+import axios from "axios";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const AddProduct = () => {
   const { data: session } = useSession({
@@ -11,7 +12,26 @@ const AddProduct = () => {
       redirect("/api/auth/signin?callbackUrl=/AddProduct");
     },
   });
-  console.log(session);
+  // console.log(session);
+
+  const [title,setTitle] = useState("")
+  const [price,setPrice] = useState(10)
+  const [number,setNumber] = useState("")
+  const [room,setRoom] = useState(107)
+  const [file,setFile] = useState()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    // const formData = new FormData();
+    const ownerEmail = session?.user?.email
+    const owner = session?.user?.name
+    // formData.append("file", file);
+    const {data} = await axios.post('/api/AddProduct',{title,price,number,room,owner,ownerEmail});
+    console.log(data)
+
+
+  }
+
   return (
     <>
       <form className="max-w-xl mx-auto mt-10 min-h-screen border p-10 rounded-xl">
@@ -59,7 +79,9 @@ const AddProduct = () => {
             id="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required
-          />
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+/>
         </div>
 
         <div className="mb-5 ">
@@ -93,6 +115,8 @@ const AddProduct = () => {
               className="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
               placeholder="Enter amount"
               required
+              value={price}
+              onChange={e => setPrice(e.target.value)}
             />
           </div>
         </div>
@@ -113,9 +137,10 @@ const AddProduct = () => {
               type="phone"
               id="phone-input"
               className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-0 border border-gray-300 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               placeholder="123-456-7890"
               required
+              value={number}
+              onChange={e => setNumber(e.target.value)}
             />
           </div>
         </div>
@@ -134,6 +159,7 @@ const AddProduct = () => {
                 id="decrement-button"
                 data-input-counter-decrement="quantity-input"
                 className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                onClick={() => setRoom(room-1)}
               >
                 <svg
                   className="w-3 h-3 text-gray-900 dark:text-white"
@@ -159,12 +185,15 @@ const AddProduct = () => {
                 className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder={107}
                 required
+                value={room}
+                onChange={e => setRoom(e.target.value)}
               />
               <button
                 type="button"
                 id="increment-button"
                 data-input-counter-increment="quantity-input"
-                className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none "
+                onClick={() => setRoom(room+1)}
               >
                 <svg
                   className="w-3 h-3 text-gray-900 dark:text-white"
@@ -220,13 +249,14 @@ const AddProduct = () => {
                 SVG, PNG, JPG or GIF (MAX. 800x400px)
               </p>
             </div>
-            <input id="dropzone-file" type="file" class="hidden" />
+            <input id="dropzone-file" type="file" class="hidden" onChange={e => setFile(e.target.files[0])}/>
           </label>
         </div>
 
         <button
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onClick={handleSubmit}
         >
           Submit
         </button>
