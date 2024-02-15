@@ -22,7 +22,7 @@ const Card = ({ product }) => {
             {product?.title}
           </h5>
           <h1 class=" justify-center gap-1  font-sans antialiased font-normal tracking-normal text-white dark:text-gray-700 text-5xl">
-            <span class="mt-2 text-xl">rs</span>
+            <span class="mt-2 text-xl">₹</span>
             {product?.price}
           </h1>
           <p className="block font-sans text-base antialiased font-light leading-relaxed text-inherit">
@@ -35,7 +35,7 @@ const Card = ({ product }) => {
             </span>
           </p>
           <p className="">
-            Room no:
+            Hostel:
             <span class="bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 ml-4">
               {product?.hostel}
             </span>

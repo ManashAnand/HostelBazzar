@@ -11,32 +11,34 @@ import axios from "axios";
 import AllItem from "@/components/custom/AllItem";
 
 import { FloatingWhatsApp } from "react-floating-whatsapp";
-import whatsImg from "./assets/icon.jpg";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 
 export default function Home() {
   const [selectedValue, setSelectedValue] = useState("Nandini");
 
-  const [allPost, setAllPost] = useState([]);
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
     console.log("worsdk");
   };
 
-  const getAllPost = async () => {
-    try {
-      const { data } = await axios.get("/api/GetAllProduct");
-      // console.log(data)
-      setAllPost(...allPost, data?.allPost);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { isPending, error, data } = useQuery({
+    queryKey: ["repoData"],
+    queryFn: async () => {
+    const {data} =  await axios.get("/api/GetAllProduct");
+      return data;
+    },
+  });
 
-  useEffect(() => {
-    getAllPost();
-  }, []);
+  if (isPending) return "Loading...";
 
+  if (error) return "An error has occurred: " + error.message;
+
+    console.log(data?.allPost)
   return (
     <>
       <div className=" flex justify-center items-center">
@@ -107,7 +109,7 @@ export default function Home() {
           </div>
         </form>
       </div>
-      <AllItem allPost={allPost} />
+      <AllItem allPost={data?.allPost} />
 
       <FloatingWhatsApp
         phoneNumber={"7067690247"}
@@ -115,9 +117,6 @@ export default function Home() {
         avatar={"./assets/icon.jpg"}
         darkMode={true}
         allowEsc
-        allowClickAway
-        notification
-        notificationSound
       />
     </>
   );

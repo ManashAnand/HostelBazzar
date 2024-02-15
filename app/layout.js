@@ -4,6 +4,7 @@ import Nav from "./(components)/Nav";
 import AuthProvider from "./(components)/AuthProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "./(components)/Footer";
+import Query from "@/react-query/reactquery";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +18,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
+          <Query>
+            
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -27,6 +30,7 @@ export default function RootLayout({ children }) {
           {children}
           <Footer/>
           </ThemeProvider>
+          </Query>
         </AuthProvider>
       </body>
     </html>
