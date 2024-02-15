@@ -1,7 +1,20 @@
 import { NextResponse } from "next/server";
 import awsSdk from 'aws-sdk'
-import fs from 'fs'
+import fs, { writeFile } from 'fs'
 import path from 'path'
+import multer  from 'multer';
+
+
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+      const extension = "".concat(file.originalname).split(".").pop();
+      const filename = Date.now().toString(36);
+      cb(null, `${filename}.${extension}`);
+  },
+});
+
+
+const upload = multer({ storage });
 
 const s3 = new awsSdk.S3({ 
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -21,9 +34,10 @@ function uploadFileToS3(fileParams) {
     });
 }
 
-async function readFileToUpload(fileDetails) {
+async function readFileToUpload(path) {
   try {
-    console.log(fileDetails)
+    // console.log(fileDetails)
+
     const fileData = fs.readFileSync(fileDetails.path);
     const linkS3 = await uploadFileToS3({
       Bucket: "imagedumperforproject",
@@ -33,9 +47,11 @@ async function readFileToUpload(fileDetails) {
       Body: fileData,
     });
     try {
-      fs.unlinkSync(fileDetails.path);
+      fs.unlinkSync(path);
+      console.log("working 1")
     } catch (err) {
-      throw err; //response
+      // throw err; //response
+      console.log(err)
     }
     if (!linkS3) {
       throw "Invalid Operation";
@@ -50,11 +66,15 @@ async function readFileToUpload(fileDetails) {
 
 export async function POST(req) {
     try {
-        
-        const formData = await req.formData();
-        const file = formData.get('file')
-        console.log(file)
-        const links3 = await readFileToUpload(file);
+      const formData = await req.formData();
+      const file = formData.get('file')
+      upload.single('file')
+        // console.log(file)
+        const byteData = await file.arrayBuffer();
+        const buffer = Buffer.from(byteData)
+        const path = `./public/${file.name}`
+        await writeFile(path,buffer)
+        const links3 = await readFileToUpload(fileDetails,path);
         req.body.image = links3;
         return NextResponse.json("working")
     } catch (error) {

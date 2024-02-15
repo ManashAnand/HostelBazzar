@@ -15,6 +15,7 @@ model Post {
   roomNo     Int
   mobile     String
   Image      String?
+  hostel     String
   price      Int
   createdAt  DateTime @default(now())
 }

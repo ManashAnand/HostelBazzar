@@ -54,8 +54,11 @@ export async function POST(req) {
     // const imageUrl = req.body;
     // console.log(req.json())
     // console.log(req.body)
-    const {title,price,number,room,ownerEmail,owner} = await req.json();
+    let {title,price,number,room,ownerEmail,owner,hostel} = await req.json();
     await connectDBP();
+
+    price = parseInt(price);
+    room = parseInt(room)
 
     try {
     const post = await prisma.post.create({data:{
@@ -64,7 +67,8 @@ export async function POST(req) {
       mobile:number,
       roomNo:room,
       ownerEmail,
-      owner
+      owner,
+      hostel
     }})
     //   if (!imageUrl) throw new Error("UPLOADING_ERROR");
 

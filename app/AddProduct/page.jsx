@@ -4,7 +4,8 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import React, { useState } from "react";
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
+import Select from "react-dropdown-select";
 
 const AddProduct = () => {
   const { data: session } = useSession({
@@ -20,38 +21,63 @@ const AddProduct = () => {
     formState: { errors },
   } = useForm();
 
-  const [title,setTitle] = useState("")
-  const [price,setPrice] = useState(10)
-  const [number,setNumber] = useState("")
-  const [room,setRoom] = useState(107)
+  const options = [
+    {
+      value: "Nandini",
+      label: "Nandini",
+    },
+    {
+      value: "Kavery",
+      label: "Kavery",
+    },
+    {
+      value: "Shambhavi",
+      label: "Shambhavi",
+    },
+  ];
+
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState(10);
+  const [number, setNumber] = useState("");
+  const [room, setRoom] = useState(107);
+  const [hostel, setHostel] = useState("Nandini");
   // const [file,setFile] = useState()
 
   const handleAddProduct = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    const hostelName = hostel[0].value
     // const formData = new FormData();
-    const ownerEmail = session?.user?.email
-    const owner = session?.user?.name
+    const ownerEmail = session?.user?.email;
+    const owner = session?.user?.name;
     // formData.append("file", file);
-    const {data} = await axios.post('/api/AddProduct',{title,price,number,room,owner,ownerEmail});
-    console.log(data)
+    try {
+      const { data } = await axios.post("/api/AddProduct", {
+        title,
+        price,
+        number,
+        room,
+        owner,
+        ownerEmail,
+        hostel:hostelName
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error)
+    }
+ 
+  };
 
-
-  }
-
-  
   const onSubmit = async (data) => {
     // e.preventDefault()
     // console.log(data.file[0])
     const formData = new FormData();
     formData.append("file", data.file[0]);
     // console.log(file)
-    console.log(formData)
+    console.log(formData);
 
-    const {data:response} = await axios.post('/api/AddImage',formData);
-    console.log(response)
-
+    const { data: response } = await axios.post("/api/AddImage", formData);
+    console.log(response);
   };
-
 
   return (
     <>
@@ -102,11 +128,11 @@ const AddProduct = () => {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-/>
+          />
         </div>
 
         <div className="mb-5 ">
-        <label
+          <label
             htmlFor="name"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
@@ -137,7 +163,7 @@ const AddProduct = () => {
               placeholder="Enter amount"
               required
               value={price}
-              onChange={e => setPrice(e.target.value)}
+              onChange={(e) => setPrice(e.target.value)}
             />
           </div>
         </div>
@@ -152,7 +178,6 @@ const AddProduct = () => {
             +91{" "}
           </button>
 
-          
           <div className="relative w-full">
             <input
               type="phone"
@@ -161,7 +186,7 @@ const AddProduct = () => {
               placeholder="123-456-7890"
               required
               value={number}
-              onChange={e => setNumber(e.target.value)}
+              onChange={(e) => setNumber(e.target.value)}
             />
           </div>
         </div>
@@ -180,7 +205,7 @@ const AddProduct = () => {
                 id="decrement-button"
                 data-input-counter-decrement="quantity-input"
                 className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
-                onClick={() => setRoom(room-1)}
+                onClick={() => setRoom(room - 1)}
               >
                 <svg
                   className="w-3 h-3 text-gray-900 dark:text-white"
@@ -207,14 +232,14 @@ const AddProduct = () => {
                 placeholder={107}
                 required
                 value={room}
-                onChange={e => setRoom(e.target.value)}
+                onChange={(e) => setRoom(e.target.value)}
               />
               <button
                 type="button"
                 id="increment-button"
                 data-input-counter-increment="quantity-input"
                 className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none "
-                onClick={() => setRoom(room+1)}
+                onClick={() => setRoom(room + 1)}
               >
                 <svg
                   className="w-3 h-3 text-gray-900 dark:text-white"
@@ -240,6 +265,16 @@ const AddProduct = () => {
               Please select a 5 digit number from 0 to 9.
             </p> */}
           </div>
+        </div>
+
+        <div className="mb-10">
+          <Select
+            className=" dark:bg-gray-700 text-black"
+            multi={false}
+            options={options}
+            color="gray "
+            onChange={(values) => setHostel(values)}
+          />
         </div>
 
         <div class="flex items-center justify-center w-full mb-4">
@@ -270,8 +305,12 @@ const AddProduct = () => {
                 SVG, PNG, JPG or GIF (MAX. 800x400px)
               </p>
             </div>
-            <input id="dropzone-file" type="file" class="hidden" 
-            {...register("file")}/>
+            <input
+              id="dropzone-file"
+              type="file"
+              class="hidden"
+              {...register("file")}
+            />
           </label>
         </div>
 
@@ -281,13 +320,6 @@ const AddProduct = () => {
           onClick={handleAddProduct}
         >
           Submit
-        </button>
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onClick={handleSubmit(onSubmit)}
-        >
-          Add image
         </button>
       </form>
     </>

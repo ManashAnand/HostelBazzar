@@ -8,24 +8,33 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import axios from 'axios';
+import AllItem from '@/components/custom/AllItem';
   
 
 export default function Home() {
   const [selectedValue, setSelectedValue] = useState('Nandini');
 
+  const [allPost,setAllPost] = useState([])
+
     const handleChange = (event) => {
       setSelectedValue(event.target.value);
         console.log("worsdk")
+
     };
 
     const getAllPost = async () => {
-      const {data } = await axios.get('/api/GetAllProduct');
-      console.log(data)
+      try {
+        const {data } = await axios.get('/api/GetAllProduct');
+        // console.log(data)
+        setAllPost(...allPost,data?.allPost);
+      } catch (error) {
+        console.log(error)
+      }
     }
 
-    // useEffect(() => {
-    //   getAllPost();
-    // })
+    useEffect(() => {
+      getAllPost();
+    },[])
 
   return (
     <>
@@ -82,6 +91,7 @@ export default function Home() {
       </div>
     </form>
     </div>
+    <AllItem allPost={allPost}/>
     </>
   );
 }
