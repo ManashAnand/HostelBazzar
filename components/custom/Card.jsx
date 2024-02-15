@@ -1,7 +1,13 @@
+import axios from "axios";
 import React from "react";
-
+import { FaWhatsapp } from "react-icons/fa";
 const Card = ({ product }) => {
-  console.log(product);
+  const handleWhatsApp = async () => {
+    const number = product?.mobile;
+    
+    const message = `Hey ${product?.owner}, I want to buy ${product?.title}`;
+    window.open((`https://web.whatsapp.com/send?phone=${number}&text=${message}&app_absent=0`))
+  }
   return (
     <>
       <div className="relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
@@ -35,8 +41,10 @@ const Card = ({ product }) => {
             </span>
           </p>
         </div>
-        <div className="p-6 pt-0">
-          <div className="w-full max-w-[16rem]">
+        <div className="p-6 pt-0 ">
+          <div className=" flex justify-between">
+            
+          <div className="w-full max-w-[16rem] ">
             <div className="relative">
               <label htmlFor="npm-install-copy-text" className="sr-only">
                 Label
@@ -92,8 +100,14 @@ const Card = ({ product }) => {
                   </span>
                 </span>
               </button>
+              
             </div>
           </div>
+          
+          <FaWhatsapp onClick={handleWhatsApp} className="h-12 w-12 text-green-500 hover:bg-green-500 hover:text-white cursor-pointer rounded-full p-2 "/>
+
+          </div>
+
         </div>
       </div>
     </>
