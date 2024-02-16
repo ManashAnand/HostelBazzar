@@ -101,7 +101,7 @@ const Nav = () => {
               {
                 session &&(
                   <Link href={'/AddProduct'} className={`${url=='/AddProduct'?"text-blue-500 dark:text-blue-500":""}`}>
-                    Add a item
+                    Add an item
                   </Link>
 
                 )

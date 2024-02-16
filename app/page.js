@@ -20,19 +20,34 @@ export default function Home() {
     setSelectedValue(value[0]?.value);
   };
 
+  const handleSearchItem = (e) => {
+    e.preventDefault()
+    // console.log(searchbar)
+    refetch()
+  }
+
+  const [searchbar,setSearchbar] = useState("")
 
 
   const { isPending, error, data, refetch } = useQuery({
     queryKey: ["repoData"],
     queryFn: async () => {
+      if(searchbar == ""){
         const { data } = await axios.get("/api/GetAllProduct");
         return data;
+      } else {
+        const { data } = await axios.get(`/api/GetSearchedProduct/${searchbar}`);
+        return data;
+      }
       
     },
   });
 
-  if (isPending) return "Loading...";
-
+  if (isPending) return (
+    <>
+      <div className="w-full flex justify-center items-center">Loading...</div>
+    </>
+  )
   if (error){
     return "An error has occurred: " + error;
   } 
@@ -74,12 +89,15 @@ export default function Home() {
                 id="search-dropdown"
                 className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50  border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500 "
                 placeholder="Search Maggie, Biscuit or Record..."
-                required
+                value={searchbar}
+                onChange={(e) => setSearchbar(e.target.value)}
+                
               />
               <button
                 type="submit"
                 className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
+                onClick={handleSearchItem}
+             >
                 <svg
                   className="w-4 h-4"
                   aria-hidden="true"
