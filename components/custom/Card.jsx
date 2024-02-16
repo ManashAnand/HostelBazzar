@@ -1,7 +1,9 @@
+import moment from 'moment'
 import axios from "axios";
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 const Card = ({ product }) => {
+  console.log(product)
   const handleWhatsApp = async () => {
     const number = product?.mobile;
     
@@ -38,6 +40,14 @@ const Card = ({ product }) => {
             Hostel:
             <span class="bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 ml-4">
               {product?.hostel}
+            </span>
+          </p>
+          <p className="">
+            Posted at: 
+            <span class="bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 ml-4">
+              {/* {product?.createdAt} */}
+              {/* {moment(product?.createdAt).format("DD-MM-YYYY HH:mm:ss")} */}
+              {moment(product?.createdAt).fromNow()}
             </span>
           </p>
         </div>
@@ -107,6 +117,7 @@ const Card = ({ product }) => {
           <FaWhatsapp onClick={handleWhatsApp} className="h-12 w-12 text-green-500 hover:bg-green-500 hover:text-white cursor-pointer rounded-full p-2 "/>
 
           </div>
+          
 
         </div>
       </div>
