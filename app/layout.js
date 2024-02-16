@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
 
           <Nav />
           {children}
+          
           <Footer/>
           </ThemeProvider>
           </Query>

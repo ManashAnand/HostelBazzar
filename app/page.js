@@ -1,12 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import axios from "axios";
 import AllItem from "@/components/custom/AllItem";
 
@@ -17,64 +10,63 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 
+import Select from "react-dropdown-select";
+
 export default function Home() {
-  const [selectedValue, setSelectedValue] = useState("Nandini");
+  const [selectedValue, setSelectedValue] = useState("All Hostel");
 
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-    console.log("worsdk");
+  const handleChange = (value) => {
+    // if(value == "All Hostel") selectedValue("")
+    setSelectedValue(value[0]?.value);
   };
 
-  const { isPending, error, data } = useQuery({
+
+
+  const { isPending, error, data, refetch } = useQuery({
     queryKey: ["repoData"],
     queryFn: async () => {
-    const {data} =  await axios.get("/api/GetAllProduct");
-      return data;
+        const { data } = await axios.get("/api/GetAllProduct");
+        return data;
+      
     },
   });
 
   if (isPending) return "Loading...";
 
-  if (error) return "An error has occurred: " + error.message;
+  if (error){
+    return "An error has occurred: " + error;
+  } 
 
-    console.log(data?.allPost)
+  const options = [
+    { value: "All Hostel", label: "All Hostel" },
+
+    {
+      value: "Nandini",
+      label: "Nandini",
+    },
+    {
+      value: "Kavery",
+      label: "Kavery",
+    },
+    {
+      value: "Shambhavi",
+      label: "Shambhavi",
+    },
+  ];
+  // console.log(data?.allPost)
   return (
     <>
       <div className=" flex justify-center items-center">
         <form className="w-[82%] mt-4">
-          <div className="flex">
-            <label
-              htmlFor="search-dropdown"
-              className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-            >
-              Your Email
-            </label>
-            <Select>
-              <SelectTrigger className="w-[180px] dark:bg-gray-700 bg-gray-300 ">
-                <SelectValue placeholder={selectedValue} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  value="Nandini"
-                  onClick={() => setSelectedValue("Nandini")}
-                >
-                  Nandini
-                </SelectItem>
-                <SelectItem
-                  value="Sambhavi"
-                  onClick={() => setSelectedValue("Sambhavi")}
-                >
-                  Sambhavi
-                </SelectItem>
-                <SelectItem
-                  value="kavery"
-                  onClick={() => setSelectedValue("kavery")}
-                >
-                  kavery
-                </SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex justify-center items-center ">
+            <Select
+              className=" dark:bg-gray-700 text-black  flex justify-center items-center"
+              style={{ minWidth: "10rem ", height: "2.5rem" }}
+              multi={false}
+              options={options}
+              color="gray "
+              onChange={(value) => handleChange(value)}
+            />
 
             <div className="relative w-full">
               <input
@@ -109,7 +101,7 @@ export default function Home() {
           </div>
         </form>
       </div>
-      <AllItem allPost={data?.allPost} />
+      <AllItem allPost={data?.allPost} hostelName={selectedValue} />
 
       <FloatingWhatsApp
         phoneNumber={"7067690247"}
