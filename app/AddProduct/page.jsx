@@ -40,20 +40,25 @@ const AddProduct = () => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     const hostelName = hostel[0].value
+    
+    const formData = new FormData();
+    formData.append("file",file);
+    
     // const formData = new FormData();
     const ownerEmail = session?.user?.email;
     const owner = session?.user?.name;
+
+    
+    formData.append("title", title)
+    formData.append("price", price)
+    formData.append("number", number)
+    formData.append("room", room)
+    formData.append("hostel", hostelName)
+    formData.append("owner", owner)
+    formData.append("ownerEmail", ownerEmail)
     // formData.append("file", file);
     try {
-      const { data } = await axios.post("/api/AddProduct", {
-        title,
-        price,
-        number,
-        room,
-        owner,
-        ownerEmail,
-        hostel:hostelName
-      });
+      const { data } = await axios.post("/api/AddProduct",formData);
       console.log(data);
     } catch (error) {
       console.log(error)
@@ -317,13 +322,13 @@ const AddProduct = () => {
           Submit
         </button>
 
-        <button
+        {/* <button
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           onClick={handleImage}
         >
           ADD image
-        </button>
+        </button> */}
       </form>
     </>
   );
