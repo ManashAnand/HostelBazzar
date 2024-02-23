@@ -1,84 +1,50 @@
 import { NextResponse } from "next/server";
-import awsSdk from 'aws-sdk'
-import fs, { writeFile } from 'fs'
-import path from 'path'
-import multer  from 'multer';
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-
-const storage = multer.diskStorage({
-  filename: function (req, file, cb) {
-      const extension = "".concat(file.originalname).split(".").pop();
-      const filename = Date.now().toString(36);
-      cb(null, `${filename}.${extension}`);
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
   },
+  region: process.env.AWS_BUCKET_REGION,
 });
 
+async function uploadFileToS3(file,fileName){
+  const fileBuffer = file;
+  console.log(fileName);
 
-const upload = multer({ storage });
-
-const s3 = new awsSdk.S3({ 
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-});
-
-function uploadFileToS3(fileParams) {
-    return new Promise((resolve, reject) => {
-            s3.upload(fileParams, (err, res) => {
-                if(err) {
-                    console.log(err);
-                    reject(err)
-                } 
-                // console.log(res);
-                resolve(res);
-            })
-    });
-}
-
-async function readFileToUpload(path) {
-  try {
-    // console.log(fileDetails)
-
-    const fileData = fs.readFileSync(fileDetails.path);
-    const linkS3 = await uploadFileToS3({
-      Bucket: "imagedumperforproject",
-      Key: fileDetails.filename,
-      ACL: "public-read",
-      ContentType: "image/jpeg",
-      Body: fileData,
-    });
-    try {
-      fs.unlinkSync(path);
-      console.log("working 1")
-    } catch (err) {
-      // throw err; //response
-      console.log(err)
-    }
-    if (!linkS3) {
-      throw "Invalid Operation";
-    }
-    return linkS3.Location;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: `${fileName}-${Date.now()}`,
+    // key: `myfolder/${fileName}-${Date.now()}`,
+    Body: fileBuffer,
+    ContentType: "image/jpg"
   }
-}
 
+  const command = new PutObjectCommand(params);
+  const fileData =  await s3.send(command);
+  console.log(fileData)
+  return fileName;
+
+}
 
 export async function POST(req) {
-    try {
-      const formData = await req.formData();
-      const file = formData.get('file')
-      upload.single('file')
-        // console.log(file)
-        const byteData = await file.arrayBuffer();
-        const buffer = Buffer.from(byteData)
-        const path = `./public/${file.name}`
-        await writeFile(path,buffer)
-        const links3 = await readFileToUpload(fileDetails,path);
-        req.body.image = links3;
-        return NextResponse.json("working")
-    } catch (error) {
-        console.log(error)
-        return NextResponse.json("Not working")
+  try {
+    const formImage = await req.formData();
+    const file = formImage.get("file");
+
+    // checks to do file type and all
+    if (!file) {
+      return NextResponse.json({ error: "File is required" }, { status: 400 });
     }
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    const fileName = await uploadFileToS3(buffer,file.name);
+
+    return NextResponse.json({success:true,fileName},{status:200});
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
 }

@@ -4,7 +4,6 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import Select from "react-dropdown-select";
 
 const AddProduct = () => {
@@ -15,11 +14,6 @@ const AddProduct = () => {
     },
   });
   // console.log(session);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
 
   const options = [
     {
@@ -41,7 +35,7 @@ const AddProduct = () => {
   const [number, setNumber] = useState("");
   const [room, setRoom] = useState(107);
   const [hostel, setHostel] = useState("Nandini");
-  // const [file,setFile] = useState()
+  const [file,setFile] = useState()
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
@@ -67,17 +61,18 @@ const AddProduct = () => {
  
   };
 
-  const onSubmit = async (data) => {
-    // e.preventDefault()
-    // console.log(data.file[0])
-    const formData = new FormData();
-    formData.append("file", data.file[0]);
-    // console.log(file)
-    console.log(formData);
+    const handleImage = async (e) => {
+      e.preventDefault()
+      // console.log("working")
+      // console.log(file)
+      const formData = new FormData();
+      formData.append("file",file);
+      // console.log(formData)
 
-    const { data: response } = await axios.post("/api/AddImage", formData);
-    console.log(response);
-  };
+      const { data } = await axios.post("/api/AddImage", formData);
+      console.log(data)
+    }
+
 
   return (
     <>
@@ -309,7 +304,7 @@ const AddProduct = () => {
               id="dropzone-file"
               type="file"
               class="hidden"
-              {...register("file")}
+              onChange={(e) => setFile(e.target.files[0])}
             />
           </label>
         </div>
@@ -320,6 +315,14 @@ const AddProduct = () => {
           onClick={handleAddProduct}
         >
           Submit
+        </button>
+
+        <button
+          type="submit"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onClick={handleImage}
+        >
+          ADD image
         </button>
       </form>
     </>
