@@ -1,36 +1,143 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# HostelBazzar - Campus Marketplace WebApp
 
-First, run the development server:
+**HostelBazzar** is an online marketplace designed for campus residents to list and sell items. This platform enables users to sell items with specific details like room numbers and features seamless **WhatsApp integration** for direct communication.
 
+# Screenshot 
+![image](https://github.com/user-attachments/assets/8d7b641e-4f32-4ab2-bd15-9cc5997ba6e6)
+
+---
+
+## ✨ Features
+
+- **Item Listing**: Users can list items they want to sell with a detailed description.
+- **Campus-Specific Marketplace**: Exclusively designed for campus residents with room number integration.
+- **High Price Selling**: Allows users to set competitive prices for their items.
+- **WhatsApp Integration**: Enables direct communication with buyers/sellers through WhatsApp.
+- **S3 Bucket Support**: Images are uploaded and managed using Amazon S3.
+- **Scalable and Fast**: Built using modern technologies like Next.js and Prisma.
+- **Live Demo**: [Try it live here](https://hostelbazzar.vercel.app/).
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or Yarn
+
+### Steps to Install
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/ManashAnand/HostelBazzar.git
+   cd HostelBazzar
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set Up Environment Variables**:
+   - Create a `.env` file in the root directory.
+   - Add the necessary credentials for your S3 bucket and database.
+
+4. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+5. **Build the Project**:
+   ```bash
+   npm run build
+   ```
+
+6. **Start the Production Server**:
+   ```bash
+   npm start
+   ```
+
+---
+
+## 🛠️ Development
+
+### Running in Development Mode
+To test changes locally, use the following command:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This starts a local development server and watches for file changes.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 📁 Project Structure
 
-## Learn More
+```plaintext
+HostelBazzar/
+├── app/                    # S3 uploaded successfully
+├── components/             # S3 uploaded successfully
+├── lib/                    # Post request using Prisma
+├── prisma/                 # Made multi items
+├── public/                 # Initial commit from Create Next App
+├── react-query/            # Used React Query
+├── .dockerignore           # Dockerized my application
+├── .env                    # Uploading image to S3 bucket
+├── .env.example            # Dockerized my application
+├── .eslintrc.json          # Initial commit from Create Next App
+├── .gitignore              # Removed .env file
+├── Dockerfile              # Dockerized my application
+├── README.md               # Initial commit from Create Next App
+├── components.json         # Next auth practice
+├── jsconfig.json           # Initial commit from Create Next App
+├── middleware.js           # Navbar customized
+├── next.config.mjs         # Provided WhatsApp web feature
+├── package-lock.json       # Uploading image to S3 bucket
+├── package.json            # Uploading image to S3 bucket
+├── postcss.config.js       # Initial commit from Create Next App
+├── tailwind.config.js      # Next auth practice
+└── vercel.json             # Cron job configuration
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🤝 Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Contributions are welcome! Here's how you can contribute:
 
-## Deploy on Vercel
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add your feature"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/your-feature
+   ```
+5. Create a Pull Request.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 📞 Support
+
+If you encounter any issues or have questions, feel free to open an [issue](https://github.com/ManashAnand/HostelBazzar/issues) or reach out.
+
+---
+
+## 🌟 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- ORM powered by [Prisma](https://www.prisma.io/)
+- Image storage via [Amazon S3](https://aws.amazon.com/s3/)
